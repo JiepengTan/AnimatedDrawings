@@ -5,9 +5,14 @@
 
 
 # install os dependencies
-sudo apt-get update 
-sudo apt install ca-certificates
-sudo apt install default-jre
+if ! command -v java &> /dev/null
+then
+	sudo apt-get update 
+	sudo apt install ca-certificates
+	echo "java could not be found, installing"
+	sudo apt install default-jre
+fi
+
 
 # install python dependencies
 pip install openmim
@@ -29,7 +34,8 @@ cd ../
 pip install mmpose==0.29.0
 pip install torchvision==0.15.1  # solve torch version problem
 
-ckpt_dir="/home/torchserve/model-store"
+cd torchserve
+ckpt_dir="./model-store"
 mkdir -p $ckpt_dir
 if [ ! -d "model-store" ]; then
 	echo "download checkpoints to " $ckpt_dir
@@ -38,6 +44,6 @@ if [ ! -d "model-store" ]; then
 fi
 
 echo "*** Now run torchserve:"
-echo "torchserve --start --ts-config torchserve/config.local.properties --foreground"
+echo "cd torchserve && torchserve --start --ts-config config.local.properties --foreground"
 
 
