@@ -529,7 +529,6 @@ class AnimatedDrawing(Transform, TimeManager):
         txtr[np.where(self.mask == 0)][:, 3] = 0  # make pixels outside mask transparent
 
         return txtr
-
     def _generate_mesh(self) -> None:
         try:
             contours: List[npt.NDArray[np.float64]] = measure.find_contours(self.mask, 128)
@@ -576,6 +575,34 @@ class AnimatedDrawing(Transform, TimeManager):
         vertices /= self.img_dim  # scale vertices so they lie between 0-1
 
         self.mesh = {'vertices': vertices, 'triangles': triangles}
+        self.save_mesh()
+
+    #@tanjp save mesh to json and obj
+    def save_mesh(self):
+         # save self.mesh to json 
+        import json
+        mesh_to_save = {
+            'vertices': self.mesh['vertices'].reshape(-1).tolist(),
+            'triangles': [value for triangle in self.mesh['triangles'] for value in triangle.reshape(-1).tolist()],
+        }
+
+        # Save to JSON file
+        with open('mesh.json', 'w') as f:
+            json.dump(mesh_to_save, f)
+
+        import pywavefront
+        from pywavefront import obj
+
+        # Assume vertices and faces are numpy arrays
+        vertices = self.mesh['vertices']
+        faces = self.mesh['triangles']
+
+        with open('mesh.obj', 'w') as file:
+            for v in vertices:
+                file.write('v {} {} {}\n'.format(v[0], v[1], 0))
+            for f in faces:
+                file.write('f {} {} {}\n'.format(f[0] + 1, f[1] + 1, f[2] + 1))  # OBJ files are 1-indexed
+
 
     def _initialize_vertices(self) -> None:
         """

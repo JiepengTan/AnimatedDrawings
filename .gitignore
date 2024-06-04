@@ -26,3 +26,5 @@ torchserve/logs/
 /examples
 /logs
 /xtcocoapi
+/mesh.*
+animated_drawings/model/AnimatedDrawings.code-workspace
