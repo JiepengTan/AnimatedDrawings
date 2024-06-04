@@ -587,11 +587,15 @@ class AnimatedDrawing(Transform, TimeManager):
     def save_animation(self):
         data_to_save = [triangle.reshape(-1).tolist() for triangle in self.ctrl_points_array  ]
         with open('out_anim.json', 'w') as f:
-            json.dump({"names": self.rig_names,"bones":self.rig_init_pts , "frames":data_to_save}, f)
+            json.dump({
+                "names": self.rig_names, 
+                "bones":self.rig_init_pts, 
+                "frames":data_to_save
+                }, f)
         pass
-    #@tanjp save mesh to json and obj
+
     def save_mesh(self):
-         # save self.mesh to json 
+        # save self.mesh to json 
         uvs = self.mesh['vertices'][:, [1, 0]]
         # initialize texture coordinates
         data_to_save = {
