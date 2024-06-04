@@ -604,8 +604,6 @@ class AnimatedDrawing(Transform, TimeManager):
         with open('out_mesh.json', 'w') as f:
             json.dump(data_to_save, f)
 
-        import pywavefront
-        from pywavefront import obj
 
         # Assume vertices and faces are numpy arrays
         vertices = self.mesh['vertices']
