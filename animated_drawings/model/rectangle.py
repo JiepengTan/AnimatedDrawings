@@ -59,6 +59,8 @@ class Rectangle(Transform):
 
     def _draw(self, **kwargs) -> None:
 
+        print("Draw Rect")
+
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
         GL.glUseProgram(kwargs['shader_ids']['color_shader'])
         model_loc = GL.glGetUniformLocation(kwargs['shader_ids']['color_shader'], "model")

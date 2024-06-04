@@ -10,6 +10,7 @@ import time
 from typing import Dict, List, Tuple, Optional, TypedDict, DefaultDict
 from collections import defaultdict
 from pathlib import Path
+import json
 
 import cv2
 import numpy as np
@@ -263,8 +264,13 @@ class AnimatedDrawing(Transform, TimeManager):
         self._is_opengl_initialized: bool = False
         self._vertex_buffer_dirty_bit: bool = True
 
+        self.ctrl_points_array = []
+        self.save_mesh()
         # pose the animated drawing using the first frame of the bvh
         self.update()
+    def _cleanup_after_run_loop(self):
+        self.save_animation()
+        pass 
 
     def _modify_retargeting_cfg_for_character(self):
         """
@@ -382,6 +388,8 @@ class AnimatedDrawing(Transform, TimeManager):
 
         # using new joint positions, calculate new mesh vertex xy positions
         control_points: npt.NDArray[np.float32] = self.rig.get_joints_2D_positions() - root_position[:2]
+        self.ctrl_points_array.append(control_points)
+
         self.vertices[:, :2] = self.arap.solve(control_points) + root_position[:2]
 
         # use the z position of the rig's root joint for all mesh vertices
@@ -573,22 +581,28 @@ class AnimatedDrawing(Transform, TimeManager):
                 triangles.append(_triangle)
 
         vertices /= self.img_dim  # scale vertices so they lie between 0-1
-
+        
         self.mesh = {'vertices': vertices, 'triangles': triangles}
-        self.save_mesh()
 
+    def save_animation(self):
+        data_to_save = [triangle.reshape(-1).tolist() for triangle in self.ctrl_points_array  ]
+        with open('out_anim.json', 'w') as f:
+            json.dump({"names": self.rig_names,"bones":self.rig_init_pts , "frames":data_to_save}, f)
+        pass
     #@tanjp save mesh to json and obj
     def save_mesh(self):
          # save self.mesh to json 
-        import json
-        mesh_to_save = {
+        uvs = self.mesh['vertices'][:, [1, 0]]
+        # initialize texture coordinates
+        data_to_save = {
             'vertices': self.mesh['vertices'].reshape(-1).tolist(),
+            'uv': uvs.reshape(-1).tolist(),
             'triangles': [value for triangle in self.mesh['triangles'] for value in triangle.reshape(-1).tolist()],
         }
 
         # Save to JSON file
-        with open('mesh.json', 'w') as f:
-            json.dump(mesh_to_save, f)
+        with open('out_mesh.json', 'w') as f:
+            json.dump(data_to_save, f)
 
         import pywavefront
         from pywavefront import obj
@@ -597,12 +611,15 @@ class AnimatedDrawing(Transform, TimeManager):
         vertices = self.mesh['vertices']
         faces = self.mesh['triangles']
 
-        with open('mesh.obj', 'w') as file:
+        with open('out_mesh.obj', 'w') as file:
             for v in vertices:
                 file.write('v {} {} {}\n'.format(v[0], v[1], 0))
+            for uv in uvs:
+                file.write('vt {} {}\n'.format(uv[0], uv[1]))
             for f in faces:
                 file.write('f {} {} {}\n'.format(f[0] + 1, f[1] + 1, f[2] + 1))  # OBJ files are 1-indexed
-
+        self.rig_names = self.rig.root_joint.get_chain_joint_names()
+        self.rig_init_pts = self.rig.get_joints_2D_positions().reshape(-1).tolist()
 
     def _initialize_vertices(self) -> None:
         """
