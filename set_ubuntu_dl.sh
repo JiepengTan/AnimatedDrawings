@@ -2,7 +2,11 @@
 
 #conda create -n drawing python=3.8.13 -y
 #conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
-
+#sudo apt-get install libosmesa6-dev freeglut3-dev
+#sudo apt-get install libglfw3-dev libgles2-mesa-dev
+#sudo apt-get install libosmesa6
+#export PYOPENGL_PLATFORM=osmesa
+##conda install -c conda-forge libstdcxx-ng=12
 
 # install os dependencies
 if ! command -v java &> /dev/null
@@ -29,14 +33,12 @@ python setup.py install
 cd ../
 
 
-echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 cd torchserve
-ckpt_dir="./model-store"
-mkdir -p $ckpt_dir
 if [ ! -d "model-store" ]; then
-	echo "download checkpoints to " $ckpt_dir
-	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_detector.mar -P $ckpt_dir/
-	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_pose_estimator.mar -P $ckpt_dir/
+	mkdir -p ./model-store
+	echo "download checkpoints to " ./model-store
+	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_detector.mar -P ./model-store/
+	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_pose_estimator.mar -P ./model-store/
 fi
 cd ..
 
