@@ -27,3 +27,4 @@ torchserve/logs/
 /xtcocoapi
 /out_*.*
 animated_drawings/model/AnimatedDrawings.code-workspace
+/torchserve/model-store
