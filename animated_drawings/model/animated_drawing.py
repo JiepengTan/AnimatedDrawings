@@ -189,8 +189,6 @@ class AnimatedDrawingRig(Transform):
                 self._set_global_orientations(c, bvh_orientations)
 
     def _draw(self, **kwargs):
-        if not kwargs['viewer_cfg'].draw_ad_rig:
-            return
 
         if not self._is_opengl_initialized:
             self._initialize_opengl_resources()
@@ -596,7 +594,7 @@ class AnimatedDrawing(Transform, TimeManager):
 
     def save_mesh(self):
         # save self.mesh to json 
-        uvs = self.mesh['vertices'][:, [1, 0]]
+        uvs = self.mesh['vertices'][:, [0, 1]]
         # initialize texture coordinates
         data_to_save = {
             'vertices': self.mesh['vertices'].reshape(-1).tolist(),

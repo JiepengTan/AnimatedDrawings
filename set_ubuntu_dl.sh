@@ -17,8 +17,6 @@ fi
 # install python dependencies
 pip install openmim
 pip install torch==2.0.0
-mim install mmcv-full==1.7.0
-pip install mmdet==2.27.0
 pip install torchserve
 
 # Check if the directory exists
@@ -30,10 +28,8 @@ pip install -r requirements.txt
 python setup.py install
 cd ../
 
-# bugfix for xtcocoapi, an mmpose dependency
-pip install mmpose==0.29.0
-pip install torchvision==0.15.1  # solve torch version problem
 
+echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 cd torchserve
 ckpt_dir="./model-store"
 mkdir -p $ckpt_dir
@@ -42,8 +38,16 @@ if [ ! -d "model-store" ]; then
 	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_detector.mar -P $ckpt_dir/
 	wget https://github.com/facebookresearch/AnimatedDrawings/releases/download/v0.0.1/drawn_humanoid_pose_estimator.mar -P $ckpt_dir/
 fi
+cd ..
+
+pip install -U openmim
+mim install mmcv-full==1.7.0
+pip install mmdet==2.27.0
+
+
+# bugfix for xtcocoapi, an mmpose dependency
+pip install mmpose==0.29.0
+pip install torchvision==0.15.1  # solve torch version problem
 
 echo "*** Now run torchserve:"
 echo "cd torchserve && torchserve --start --ts-config config.local.properties --foreground"
-
-
