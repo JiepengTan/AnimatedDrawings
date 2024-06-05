@@ -19,10 +19,10 @@ rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init zsh
 
 
+conda create --name draw python=3.8.13 -y
+conda activate draw
 
-
-sudo apt-get install libosmesa6-dev freeglut3-dev
-sudo apt-get install libglfw3-dev libgles2-mesa-dev
-sudo apt-get install libosmesa6
+sudo apt-get install libosmesa6-dev freeglut3-dev -y
+sudo apt-get install libglfw3-dev libgles2-mesa-dev -y 
+sudo apt-get install libosmesa6 - y
 export PYOPENGL_PLATFORM=osmesa 
-conda install -c conda-forge libstdcxx-ng
