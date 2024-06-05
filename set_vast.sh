@@ -26,3 +26,4 @@ sudo apt-get install libosmesa6-dev freeglut3-dev -y
 sudo apt-get install libglfw3-dev libgles2-mesa-dev -y 
 sudo apt-get install libosmesa6 - y
 export PYOPENGL_PLATFORM=osmesa 
+#conda install -c conda-forge libstdcxx-ng
