@@ -15,10 +15,8 @@ fi
 
 
 # install python dependencies
-pip install openmim
-pip install torch==2.0.0
-pip install torchserve
 
+pip install -U openmim torch==1.13.0 torchserve
 # Check if the directory exists
 if [ ! -d "xtcocoapi" ]; then
 	git clone https://github.com/jin-s13/xtcocoapi.git
@@ -40,14 +38,13 @@ if [ ! -d "model-store" ]; then
 fi
 cd ..
 
-pip install -U openmim
-mim install mmcv-full==1.7.0
-pip install mmdet==2.27.0
+echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
+pip install -U openmim torch==1.13.0 torchserve mmdet==2.27.0 mmpose==0.29.0 numpy==1.23.3 requests==2.31.0 scipy==1.10.0 tqdm==4.64.1
+mim install mmcv-full==1.7.0
 
 # bugfix for xtcocoapi, an mmpose dependency
 pip install mmpose==0.29.0
-pip install torchvision==0.15.1  # solve torch version problem
 
 echo "*** Now run torchserve:"
 echo "cd torchserve && torchserve --start --ts-config config.local.properties --foreground"
