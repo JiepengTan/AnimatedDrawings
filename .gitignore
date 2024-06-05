@@ -23,7 +23,6 @@ examples/garlic_out
 torchserve/logs/
 /model-store
 /media
-/examples
 /logs
 /xtcocoapi
 /out_*.*
