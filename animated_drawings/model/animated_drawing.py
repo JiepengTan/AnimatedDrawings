@@ -592,15 +592,19 @@ class AnimatedDrawing(Transform, TimeManager):
 
     def save_animation(self):
         anim_frames_bone = np.array([triangle.reshape(-1).tolist() for triangle in self.anim_frames_bone  ]).reshape(-1).tolist()
-        anim_frames_vertex = np.array(self.anim_frames_vertex ).reshape(-1).tolist()
+        anim_frames_vertex = np.array(self.anim_frames_vertex)
+        render_orders =self.render_orders
+        frame_count= len(anim_frames_vertex)
+        anim_frames_vertex = anim_frames_vertex.reshape(-1).tolist()
+        anim_frames_vertex = [round(num, 4) for num in anim_frames_vertex]
         with open('out_anim.json', 'w') as f:
             json.dump({
-                "names": self.rig_names, 
-                "bones": self.rig_init_pts, 
-                "frameCount": len(self.anim_frames_bone),
-                "anim_frames_bone":anim_frames_bone,
+                #"names": self.rig_names, 
+                #"bones": self.rig_init_pts, 
+                #"anim_frames_bone":anim_frames_bone,
+                "frame_count": frame_count,
                 "anim_frames_vertex":anim_frames_vertex,
-                "render_orders": self.render_orders
+                "render_orders": render_orders
                 }, f)
 
     def save_mesh(self):
