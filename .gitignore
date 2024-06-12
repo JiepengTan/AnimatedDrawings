@@ -28,3 +28,7 @@ torchserve/logs/
 /out_*.*
 animated_drawings/model/AnimatedDrawings.code-workspace
 /torchserve/model-store
+/examples/out_*
+/examples/drawings
+/nohup*
+/bin
